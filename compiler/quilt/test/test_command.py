@@ -19,6 +19,13 @@ from quilt.tools import command, store
 from .utils import QuiltTestCase, patch
 
 class CommandTest(QuiltTestCase):
+    def _mock_delete(self, status=201, team=None):
+        self.requests_mock.add(
+            responses.POST,
+            '%s/api/users/delete' % command.get_registry_url(team),
+            status=status
+            )
+
     @patch('quilt.tools.command._save_config')
     @patch('quilt.tools.command._load_config')
     @patch('quilt.tools.command.input')
@@ -364,7 +371,7 @@ class CommandTest(QuiltTestCase):
         with self.assertRaises(command.CommandException):
             command.list_users()
         pass
-    
+
     def test_user_create(self):
         self.requests_mock.add(
             responses.POST,
@@ -392,7 +399,7 @@ class CommandTest(QuiltTestCase):
         with self.assertRaises(command.CommandException):
             command.create_user('bob', 'bob@quitdata.io')
         pass
-    
+
     def test_user_disable(self):
         self.requests_mock.add(
             responses.POST,
@@ -411,7 +418,7 @@ class CommandTest(QuiltTestCase):
         with self.assertRaises(command.CommandException):
             command.disable_user('bob')
         pass
-    
+
     def test_user_delete(self):
         self.requests_mock.add(
             responses.POST,
@@ -419,6 +426,14 @@ class CommandTest(QuiltTestCase):
             status=201
             )
         command.delete_user('bob', force=True)
+
+        team = 'qux'
+        self.requests_mock.add(
+            responses.POST,
+            '%s/api/users/delete' % command.get_registry_url(team),
+            status=201
+            )
+        command.delete_user('bob', force=True, team=team)
         pass
 
     def test_user_delete_no_auth(self):
@@ -429,8 +444,35 @@ class CommandTest(QuiltTestCase):
             )
         with self.assertRaises(command.CommandException):
             command.delete_user('bob', force=True)
+
+        team = 'qux'
+        self.requests_mock.add(
+            responses.POST,
+            '%s/api/users/delete' % command.get_registry_url(team),
+            status=401
+            )
+        with self.assertRaises(command.CommandException):
+            command.delete_user('bob', force=True, team=team)
         pass
-    
+
+    def test_user_delete_empty(self):
+        self._mock_delete(status=404)
+        with self.assertRaises(command.CommandException):
+            command.delete_user('', force=True)
+
+        self._mock_delete(status=404, team='qux')
+        with self.assertRaises(command.CommandException):
+            command.delete_user('', force=True, team='qux')
+
+    def test_user_delete_unknown(self):
+        self._mock_delete(status=404)
+        with self.assertRaises(command.CommandException):
+            command.delete_user('unknown', force=True)
+
+        self._mock_delete(status=404, team='qux')
+        with self.assertRaises(command.CommandException):
+            command.delete_user('unknown', force=True, team='qux')
+
 
 # TODO: work in progress
 #    def test_find_node_by_name(self):
