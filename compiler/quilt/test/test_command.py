@@ -19,10 +19,10 @@ from quilt.tools import command, store
 from .utils import QuiltTestCase, patch
 
 class CommandTest(QuiltTestCase):
-    def _mock_delete(self, status=201, team=None):
+    def _mock_method(self, method, status=201, team=None):
         self.requests_mock.add(
             responses.POST,
-            '%s/api/users/delete' % command.get_registry_url(team),
+            '%s/api/users/%s' % (command.get_registry_url(team), method)
             status=status
             )
 
@@ -419,6 +419,24 @@ class CommandTest(QuiltTestCase):
             command.disable_user('bob')
         pass
 
+    def test_user_disable_empty(self):
+        self._mock_method('disable', status=404)
+        with self.assertRaises(command.CommandException):
+            command.disable_user('')
+
+        self._mock_method('disable', status=404, team='qux')
+        with self.assertRaises(command.CommandException):
+            command.disable_user('', team='qux')
+
+    def test_user_disable_unknown(self):
+        self._mock_method('disable', status=404)
+        with self.assertRaises(command.CommandException):
+            command.disable_user('unknown')
+
+        self._mock_method('disable', status=404, team='qux')
+        with self.assertRaises(command.CommandException):
+            command.disable_user('unknown', team='qux')
+    
     def test_user_delete(self):
         self.requests_mock.add(
             responses.POST,
@@ -456,20 +474,20 @@ class CommandTest(QuiltTestCase):
         pass
 
     def test_user_delete_empty(self):
-        self._mock_delete(status=404)
+        self._mock_method('delete', status=404)
         with self.assertRaises(command.CommandException):
             command.delete_user('', force=True)
 
-        self._mock_delete(status=404, team='qux')
+        self._mock_method('delete', status=404, team='qux')
         with self.assertRaises(command.CommandException):
             command.delete_user('', force=True, team='qux')
 
     def test_user_delete_unknown(self):
-        self._mock_delete(status=404)
+        self._mock_method('delete', status=404)
         with self.assertRaises(command.CommandException):
             command.delete_user('unknown', force=True)
 
-        self._mock_delete(status=404, team='qux')
+        self._mock_method('delete', status=404, team='qux')
         with self.assertRaises(command.CommandException):
             command.delete_user('unknown', force=True, team='qux')
 
