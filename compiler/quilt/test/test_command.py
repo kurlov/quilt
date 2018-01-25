@@ -22,7 +22,7 @@ class CommandTest(QuiltTestCase):
     def _mock_method(self, method, status=201, team=None):
         self.requests_mock.add(
             responses.POST,
-            '%s/api/users/%s' % (command.get_registry_url(team), method)
+            '%s/api/users/%s' % (command.get_registry_url(team), method),
             status=status
             )
 
@@ -436,7 +436,7 @@ class CommandTest(QuiltTestCase):
         self._mock_method('disable', status=404, team='qux')
         with self.assertRaises(command.CommandException):
             command.disable_user('unknown', team='qux')
-    
+
     def test_user_delete(self):
         self.requests_mock.add(
             responses.POST,
