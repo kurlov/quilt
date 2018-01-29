@@ -28,7 +28,8 @@ RUN npm install --no-bin-links -y
 COPY app app
 COPY static static
 COPY config.js.tmpl .
-RUN npm install rimraf -g --no-bin-links -y || npm install rimraf -g --no-bin-links -y
+RUN npm install --global --no-bin-links rimraf -y || npm install --global --no-bin-links rimraf -y
+RUN npm install --no-bin-links rimraf -y || npm install --no-bin-links rimraf -y
 RUN npm run build
 
 # Set up nginx
