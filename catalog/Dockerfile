@@ -22,13 +22,13 @@ COPY internals internals
 RUN ls
 RUN pwd
 VOLUME /opt/app/node_modules
-RUN sudo npm install --no-bin-links
+RUN npm install --no-bin-links -y
 
 # Install the app
 COPY app app
 COPY static static
 COPY config.js.tmpl .
-RUN npm install rimraf -g --no-bin-links || npm install rimraf -g --no-bin-links
+RUN npm install rimraf -g --no-bin-links -y || npm install rimraf -g --no-bin-links -y
 RUN npm run build
 
 # Set up nginx
