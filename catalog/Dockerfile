@@ -22,7 +22,7 @@ COPY internals internals
 RUN ls
 RUN pwd
 VOLUME /opt/app/node_modules
-RUN npm install --no-bin-links
+RUN sudo npm install --no-bin-links
 
 # Install the app
 COPY app app
