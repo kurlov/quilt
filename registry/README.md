@@ -30,7 +30,7 @@ Instructions for popular operating systems:
 * Windows
      * [docker](https://docs.docker.com/docker-for-windows/install/)
      * [docker compose](https://docs.docker.com/compose/install/#install-compose)
-     * [ ] Test these instructions on Windows
+     * Make sure you run PowerShell as administrator
 
 
 ##  2) Build and start the containers
