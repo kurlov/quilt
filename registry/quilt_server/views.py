@@ -32,7 +32,7 @@ from .const import PaymentPlan, PUBLIC, TEAM, VALID_NAME_RE, VALID_EMAIL_RE
 from .core import decode_node, find_object_hashes, hash_contents, FileNode, GroupNode, RootNode
 from .models import (Access, Customer, Event, Instance, Invitation, Log, Package,
                      S3Blob, Tag, Version)
-from .schemas import LOG_SCHEMA, PACKAGE_SCHEMA
+from .schemas import LOG_SCHEMA, PACKAGE_SCHEMA, USERNAME_EMAIL_SCHEMA, USERNAME_SCHEMA
 
 QUILT_CDN = 'https://cdn.quiltdata.com/'
 
@@ -84,6 +84,8 @@ s3_client = boto3.client(
     aws_access_key_id=app.config.get('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=app.config.get('AWS_SECRET_ACCESS_KEY')
 )
+
+auth_session = requests.Session()
 
 stripe.api_key = app.config['STRIPE_SECRET_KEY']
 HAVE_PAYMENTS = bool(stripe.api_key)
@@ -332,7 +334,7 @@ def api(require_login=True, schema=None, enabled=True, require_admin=False):
                     AUTHORIZATION_HEADER: auth
                 }
                 try:
-                    resp = requests.get(OAUTH_USER_API, headers=headers)
+                    resp = auth_session.get(OAUTH_USER_API, headers=headers)
                     resp.raise_for_status()
 
                     data = resp.json()
@@ -1258,14 +1260,18 @@ def access_put(owner, package_name, user):
         db.session.commit()
 
         # Call to Auth to send invitation email
-        resp = requests.post(INVITE_SEND_URL,
-                             headers=auth_headers,
-                             data=dict(email=email,
-                                       owner=g.auth.user,
-                                       package=package.name,
-                                       client_id=OAUTH_CLIENT_ID,
-                                       client_secret=OAUTH_CLIENT_SECRET,
-                                       callback_url=OAUTH_REDIRECT_URL))
+        resp = auth_session.post(
+            INVITE_SEND_URL,
+            headers=auth_headers,
+            data=dict(
+                email=email,
+                owner=g.auth.user,
+                package=package.name,
+                client_id=OAUTH_CLIENT_ID,
+                client_secret=OAUTH_CLIENT_SECRET,
+                callback_url=OAUTH_REDIRECT_URL
+            )
+        )
 
         if resp.status_code == requests.codes.unauthorized:
             raise ApiException(
@@ -1285,8 +1291,8 @@ def access_put(owner, package_name, user):
             if not ALLOW_TEAM_ACCESS:
                 raise ApiException(requests.codes.forbidden, "Team access not allowed")
         else:
-            resp = requests.get(OAUTH_PROFILE_API % user,
-                                headers=auth_headers)
+            resp = auth_session.get(OAUTH_PROFILE_API % user,
+                                    headers=auth_headers)
             if resp.status_code == requests.codes.not_found:
                 raise ApiException(
                     requests.codes.not_found,
@@ -1546,6 +1552,7 @@ def profile():
         ),
         plan=plan,
         have_credit_card=have_cc,
+        is_admin=g.auth.is_admin,
     )
 
 @app.route('/api/payments/update_plan', methods=['POST'])
@@ -1679,7 +1686,7 @@ def list_users():
 
     user_list_api = "%s/accounts/users" % QUILT_AUTH_URL
 
-    resp = requests.get(user_list_api, headers=auth_headers)
+    resp = auth_session.get(user_list_api, headers=auth_headers)
 
     if resp.status_code == requests.codes.not_found:
         raise ApiException(
@@ -1720,7 +1727,7 @@ def list_users_detailed():
 
     user_list_api = "%s/accounts/users" % QUILT_AUTH_URL
 
-    users = requests.get(user_list_api, headers=auth_headers).json()
+    users = auth_session.get(user_list_api, headers=auth_headers).json()
 
     results = {
         user['username'] : {
@@ -1730,7 +1737,8 @@ def list_users_detailed():
             'pushes' : event_results[(user['username'], Event.Type.PUSH)],
             'deletes' : event_results[(user['username'], Event.Type.DELETE)],
             'status' : 'active' if user['is_active'] else 'disabled',
-            'last_seen' : user['last_login']
+            'last_seen' : user['last_login'],
+            'is_admin' : user['is_staff']
             }
         for user in users['results']
     }
@@ -1739,7 +1747,7 @@ def list_users_detailed():
 
 
 @app.route('/api/users/create', methods=['POST'])
-@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True)
+@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True, schema=USERNAME_EMAIL_SCHEMA)
 @as_json
 def create_user():
     auth_headers = {
@@ -1748,19 +1756,18 @@ def create_user():
         "Accept": "application/json",
     }
 
-    request_data = request.get_json()
-
     user_create_api = '%s/accounts/users/' % QUILT_AUTH_URL
 
-    username = request_data.get('username')
+    data = request.get_json()
+    username = data['username']
     _validate_username(username)
 
-    resp = requests.post(user_create_api, headers=auth_headers,
+    resp = auth_session.post(user_create_api, headers=auth_headers,
         data=json.dumps({
             "username": username,
             "first_name": "",
             "last_name": "",
-            "email": request_data.get('email'),
+            "email": data['email'],
             "is_superuser": False,
             "is_staff": False,
             "is_active": True,
@@ -1794,7 +1801,7 @@ def create_user():
     return resp.json()
 
 @app.route('/api/users/disable', methods=['POST'])
-@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True)
+@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True, schema=USERNAME_SCHEMA)
 @as_json
 def disable_user():
     auth_headers = {
@@ -1806,10 +1813,16 @@ def disable_user():
     user_modify_api = '%s/accounts/users/' % QUILT_AUTH_URL
 
     data = request.get_json()
-    username = data.get('username')
+    username = data['username']
     _validate_username(username)
 
-    resp = requests.patch("%s%s/" % (user_modify_api, username) , headers=auth_headers,
+    if g.auth.user == username:
+        raise ApiException(
+            requests.codes.forbidden,
+            "Can't disable your own account."
+            )
+
+    resp = auth_session.patch("%s%s/" % (user_modify_api, username) , headers=auth_headers,
         data=json.dumps({
             'is_active' : False
         }))
@@ -1829,7 +1842,7 @@ def disable_user():
     return resp.json()
 
 @app.route('/api/users/enable', methods=['POST'])
-@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True)
+@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True, schema=USERNAME_SCHEMA)
 @as_json
 def enable_user():
     auth_headers = {
@@ -1841,10 +1854,10 @@ def enable_user():
     user_modify_api = '%s/accounts/users/' % QUILT_AUTH_URL
 
     data = request.get_json()
-    username = data.get('username')
+    username = data['username']
     _validate_username(username)
 
-    resp = requests.patch("%s%s/" % (user_modify_api, username) , headers=auth_headers,
+    resp = auth_session.patch("%s%s/" % (user_modify_api, username) , headers=auth_headers,
         data=json.dumps({
             'is_active' : True
         }))
@@ -1865,7 +1878,7 @@ def enable_user():
 
 # This endpoint is disabled pending a rework of authentication
 @app.route('/api/users/delete', methods=['POST'])
-@api(enabled=False, require_admin=True)
+@api(enabled=False, require_admin=True, schema=USERNAME_SCHEMA)
 @as_json
 def delete_user():
     auth_headers = {
@@ -1876,10 +1889,10 @@ def delete_user():
     user_modify_api = '%s/accounts/users/' % QUILT_AUTH_URL
 
     data = request.get_json()
-    username = data.get('username')
+    username = data['username']
     _validate_username(username)
 
-    resp = requests.delete("%s%s/" % (user_modify_api, username), headers=auth_headers)
+    resp = auth_session.delete("%s%s/" % (user_modify_api, username), headers=auth_headers)
 
     if resp.status_code == requests.codes.not_found:
         raise ApiException(
@@ -1966,7 +1979,7 @@ def package_summary():
     return {'packages' : results}
 
 @app.route('/api/users/reset_password', methods=['POST'])
-@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True)
+@api(enabled=ENABLE_USER_ENDPOINTS, require_admin=True, schema=USERNAME_SCHEMA)
 @as_json
 def reset_password():
     auth_headers = {
@@ -1978,10 +1991,10 @@ def reset_password():
     password_reset_api = '%s/accounts/users/' % QUILT_AUTH_URL
 
     data = request.get_json()
-    username = data.get('username')
+    username = data['username']
     _validate_username(username)
 
-    resp = requests.post("%s%s/reset_pass/" % (password_reset_api, username), headers=auth_headers)
+    resp = auth_session.post("%s%s/reset_pass/" % (password_reset_api, username), headers=auth_headers)
 
     if resp.status_code == requests.codes.not_found:
         raise ApiException(
