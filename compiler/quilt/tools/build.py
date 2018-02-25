@@ -63,7 +63,7 @@ def _path_hash(path, transform, kwargs):
     return digest_string(srcinfo)
 
 def _is_internal_node(node):
-    is_leaf = not node or node.get(RESERVED['file']) or not isinstance(node.get(RESERVED['file']), dict)
+    is_leaf = not node or node.get(RESERVED['file']) or isinstance(node.get(RESERVED['file']), dict)
     return not is_leaf
 
 def _pythonize_name(name):
