@@ -172,7 +172,7 @@ class BuildTest(QuiltTestCase):
         assert os.path.exists(buildfilepath)
         build.build_package(None, 'test_generated', 'generated', buildfilepath)
         os.remove(buildfilepath)
-        from quilt.data.test_generated.generated import bad, foo, nuts, README, file
+        from quilt.data.test_generated.generated import bad, foo, nuts, README
 
     def test_failover(self):
         """
@@ -238,7 +238,7 @@ class BuildTest(QuiltTestCase):
         assert not os.path.exists(buildfilepath), "%s already exists" % buildfilepath
 
         command.build_from_path('test_copy/generated', path, outfilename=buildfilename)
-        from quilt.data.test_copy.generated import bad, foo, nuts
+        from quilt.data.test_copy.generated import bad, foo, nuts, file
 
         assert not os.path.exists(buildfilepath), "%s should not have been created!" % buildfilepath
 
