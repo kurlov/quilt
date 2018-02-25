@@ -1,8 +1,10 @@
 ---
 contents:
   dataframes:
-    csv: 
+    csv:
       file: data/foo.csv
+      # check that reserved name handles properly
+      file: data/file.csv
     nulls:
       file: data/nulls.csv
   README:
