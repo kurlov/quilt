@@ -63,7 +63,7 @@ def _path_hash(path, transform, kwargs):
     return digest_string(srcinfo)
 
 def _is_internal_node(node):
-    is_leaf = not node or node.get(RESERVED['file'])
+    is_leaf = not node or node.get(RESERVED['file']) or not isinstance(node.get(RESERVED['file']), dict)
     return not is_leaf
 
 def _pythonize_name(name):
@@ -168,8 +168,6 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         rel_path = node.get(RESERVED['file'])
         if not rel_path:
             raise BuildException("Leaf nodes must define a %s key" % RESERVED['file'])
-        if isinstance(rel_path, dict):
-            assert rel_path is None
         path = os.path.join(build_dir, rel_path)
         # get either the locally defined transform or inherit from an ancestor
         transform = node.get(RESERVED['transform']) or ancestor_args.get(RESERVED['transform'])
