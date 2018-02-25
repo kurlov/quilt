@@ -180,7 +180,7 @@ class BuildTest(QuiltTestCase):
         assert os.path.exists(buildfilepath)
         build.build_package(None, 'test_generated', 'generated', buildfilepath)
         os.remove(buildfilepath)
-        from quilt.data.test_generated.generated import bad, foo, nuts, README, file
+        from quilt.data.test_generated.generated import bad, foo, nuts, README
 
     def test_failover(self):
         """
