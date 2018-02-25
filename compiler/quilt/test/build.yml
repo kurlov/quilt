@@ -5,5 +5,7 @@ contents:
       file: data/foo.csv
     nulls:
       file: data/nulls.csv
+    reserved_filename:
+      file: data/file.csv
   README:
     file: data/README.md

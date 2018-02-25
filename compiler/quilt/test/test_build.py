@@ -120,9 +120,8 @@ class BuildTest(QuiltTestCase):
         mydir = os.path.dirname(__file__)
         path = os.path.join(mydir, './build_reserved.yml')
         build.build_package(None, 'reserved', 'pkg', path)
-
         from quilt.data.reserved import pkg
-        assert not pkg._keys(), 'Expected package to be empty'
+        assert pkg.reserved_filename
 
     def test_build_group_args(self):
         """
@@ -180,7 +179,7 @@ class BuildTest(QuiltTestCase):
         assert os.path.exists(buildfilepath)
         build.build_package(None, 'test_generated', 'generated', buildfilepath)
         os.remove(buildfilepath)
-        from quilt.data.test_generated.generated import bad, foo, nuts, README
+        from quilt.data.test_generated.generated import bad, foo, nuts, README, reserved_filename
 
     def test_failover(self):
         """
