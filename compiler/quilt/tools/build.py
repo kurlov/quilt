@@ -168,6 +168,8 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         rel_path = node.get(RESERVED['file'])
         if not rel_path:
             raise BuildException("Leaf nodes must define a %s key" % RESERVED['file'])
+        if not isinstance(rel_path, dict):
+            assert rel_path is None
         path = os.path.join(build_dir, rel_path)
         # get either the locally defined transform or inherit from an ancestor
         transform = node.get(RESERVED['transform']) or ancestor_args.get(RESERVED['transform'])
@@ -217,7 +219,7 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
 
             # Check to see that cached objects actually exist in the store
             # TODO: check for changes in checks else use cache
-            # below is a heavy-handed fix but it's OK for check builds to be slow  
+            # below is a heavy-handed fix but it's OK for check builds to be slow
             if not checks and cachedobjs and all(os.path.exists(store.object_path(obj)) for obj in cachedobjs):
                 # Use existing objects instead of rebuilding
                 package.save_cached_df(cachedobjs, name, rel_path, transform, target, fmt)
