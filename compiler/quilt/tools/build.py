@@ -63,6 +63,8 @@ def _path_hash(path, transform, kwargs):
     return digest_string(srcinfo)
 
 def _is_internal_node(node):
+    if isinstance(node, str):
+        assert node is None
     is_leaf = not node or isinstance(node.get(RESERVED['file']), str)
     return not is_leaf
 
