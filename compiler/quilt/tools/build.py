@@ -63,21 +63,18 @@ def _path_hash(path, transform, kwargs):
     return digest_string(srcinfo)
 
 def _is_internal_node(node):
-    # if isinstance(node, str):
-    #     return False
-    # if isinstance(node, int):
-    #     # assert node is None
-    #     return True
     is_leaf = not node or isinstance(node.get(RESERVED['file']), str)
     return not is_leaf
 
 def _get_local_args(node, keys):
     result = {}
     for key in keys:
-        if node.get(key):
-            if isinstance(node[key], dict):
-                assert node[key] is None
-            result[key] = node[key]
+        if key in node:
+            # do not consider value as argument in case it has 'file' key
+            if isinstance(node[key], dict) and not RESERVED['file'] in node[key]:
+                result[key] = node[key]
+            if not isinstance(node[key], dict):
+                result[key] = node[key]
     return result
 
 def _is_valid_group(group):
