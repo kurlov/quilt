@@ -122,6 +122,10 @@ class BuildTest(QuiltTestCase):
         build.build_package(None, 'reserved', 'pkg', path)
         from quilt.data.reserved import pkg
         assert pkg.file
+        assert pkg.checks
+        assert pkg.environments
+        assert pkg.kwargs
+        assert pkg.transform
 
     def test_build_group_args(self):
         """
