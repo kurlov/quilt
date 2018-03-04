@@ -6,5 +6,5 @@ contents:
     file: data/foo.csv
   environments:
     file: data/foo.csv
-  kwargs:
+  transform:
     file: data/foo.csv

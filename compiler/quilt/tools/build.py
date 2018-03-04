@@ -180,14 +180,14 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         rel_path = node.get(RESERVED['file'])
         if not rel_path:
             raise BuildException("Leaf nodes must define a %s key" % RESERVED['file'])
-        if isinstance(rel_path, dict):
-            assert rel_path is None
         path = os.path.join(build_dir, rel_path)
         # get either the locally defined transform or inherit from an ancestor
         transform = node.get(RESERVED['transform']) or ancestor_args.get(RESERVED['transform'])
 
         ID = 'id' # pylint:disable=C0103
         if transform:
+            if isinstance(transform, dict):
+                assert transform is None
             transform = transform.lower()
             if (transform not in PARSERS) and (transform != ID):
                 raise BuildException("Unknown transform '%s' for %s @ %s" %
