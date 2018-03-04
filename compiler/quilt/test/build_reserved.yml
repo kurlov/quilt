@@ -8,5 +8,3 @@ contents:
     file: data/file.csv
   kwargs:
     file: data/file.csv
-  transform:
-    file: data/file.csv
