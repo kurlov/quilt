@@ -71,9 +71,8 @@ def _get_local_args(node, keys):
     for key in keys:
         if key in node:
             # do not consider value as argument in case it has 'file' key
-            if isinstance(node[key], dict) and not RESERVED['file'] in node[key]:
-                result[key] = node[key]
-            if not isinstance(node[key], dict):
+            if (not isinstance(node[key], dict) or
+                (isinstance(node[key], dict) and not RESERVED['file'] in node[key])):
                 result[key] = node[key]
     return result
 
