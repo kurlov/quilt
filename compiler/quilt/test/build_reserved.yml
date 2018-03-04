@@ -3,8 +3,4 @@ contents:
   file:
     file: data/file.csv
   checks:
-    file: data/file.csv
-  environments:
-    file: data/file.csv
-  kwargs:
-    file: data/file.csv
+    file: data/foo.csv
