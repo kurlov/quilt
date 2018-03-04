@@ -147,7 +147,8 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         group_args.update(local_args)
         # if it's not a reserved word it's a group that we can descend
         groups = {k: v for k, v in iteritems(node) if k not in RESERVED}
-        assert groups is None
+        if 'subgroup' in groups:
+            assert groups is None
         for child_name, child_table in groups.items():
             if glob.has_magic(child_name):
                 # child_name is a glob string, use it to generate multiple child nodes
