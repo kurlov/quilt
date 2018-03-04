@@ -161,8 +161,6 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
             else:
                 if not isinstance(child_name, str) or not is_nodename(child_name):
                     raise StoreException("Invalid node name: %r" % child_name)
-                # if not isinstance(child_table, str):
-                # raise StoreException("Invalid node name: %r" % child_table)
                 full_child_name = name + '/' + child_name if name else child_name
                 _build_node(build_dir, package, full_child_name, child_table, fmt,
                     checks_contents=checks_contents, dry_run=dry_run, env=env, ancestor_args=group_args)
