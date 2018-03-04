@@ -146,7 +146,7 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         group_args = ancestor_args.copy()
         group_args.update(local_args)
         # if it's not a reserved word it's a group that we can descend
-        groups = {k: v for k, v in iteritems(node) if isinstance(v, dict)} # if k not in RESERVED}
+        groups = {k: v for k, v in iteritems(node) if isinstance(v, dict) or v is None} # if k not in RESERVED}
         # if 'subgroup' in groups:
         #     assert groups is None
         for child_name, child_table in groups.items():
