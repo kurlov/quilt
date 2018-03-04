@@ -2,3 +2,11 @@
 contents:
   file:
     file: data/file.csv
+  checks:
+    file: data/file.csv
+  environments:
+    file: data/file.csv
+  kwargs:
+    file: data/file.csv
+  transform:
+    file: data/file.csv
