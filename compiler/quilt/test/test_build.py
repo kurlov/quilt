@@ -124,7 +124,7 @@ class BuildTest(QuiltTestCase):
         assert pkg.file
         assert pkg.checks
         assert pkg.environments
-        # assert pkg.kwargs
+        assert pkg.kwargs
         # assert pkg.transform
 
     def test_build_group_args(self):
