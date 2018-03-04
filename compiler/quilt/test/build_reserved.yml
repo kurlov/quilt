@@ -4,3 +4,5 @@ contents:
     file: data/file.csv
   checks:
     file: data/foo.csv
+  environments:
+    file: data/foo.csv

@@ -123,7 +123,7 @@ class BuildTest(QuiltTestCase):
         from quilt.data.reserved import pkg
         assert pkg.file
         assert pkg.checks
-        # assert pkg.environments
+        assert pkg.environments
         # assert pkg.kwargs
         # assert pkg.transform
 
