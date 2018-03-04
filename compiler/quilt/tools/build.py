@@ -74,7 +74,9 @@ def _is_internal_node(node):
 def _get_local_args(node, keys):
     result = {}
     for key in keys:
-        if node.get(key): # and not isinstance(node[key], dict):
+        if node.get(key):
+            if isinstance(node[key], dict):
+                assert node[key] is None
             result[key] = node[key]
     return result
 
