@@ -71,11 +71,15 @@ def _is_internal_node(node):
     is_leaf = not node or isinstance(node.get(RESERVED['file']), str)
     return not is_leaf
 
+def _get_local_args(node, keys):
+    result = {}
+    for key in keys:
+        if node.get(key) and not isinstance(node[key], dict):
+            result[key] = node[key]
+    return result
+
 def _is_valid_group(group):
     return isinstance(group, dict) or group is None
-
-def _get_args(node, key):
-    return
 
 def _pythonize_name(name):
     safename = re.sub('[^A-Za-z0-9]+', '_', name).strip('_')
@@ -144,13 +148,13 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         # NOTE: YAML parsing does not guarantee key order
         # fetch local transform and kwargs values; we do it using ifs
         # to prevent `key: None` from polluting the update
-        local_args = {}
-        if node.get(RESERVED['transform']):
-            ancestor_args[RESERVED['transform']] = node[RESERVED['transform']]
-        if node.get(RESERVED['kwargs']):
-            ancestor_args[RESERVED['kwargs']] = node[RESERVED['kwargs']]
-        # group_args = ancestor_args.copy()
-        # group_args.update(local_args)
+        local_args = _get_local_args(node, [RESERVED['transform'], RESERVED['kwargs']])
+        # if node.get(RESERVED['transform']):
+        #     local_args[RESERVED['transform']] = node[RESERVED['transform']]
+        # if node.get(RESERVED['kwargs']):
+        #     local_args[RESERVED['kwargs']] = node[RESERVED['kwargs']]
+        group_args = ancestor_args.copy()
+        group_args.update(local_args)
         # if it's not a reserved word it's a group that we can descend
         groups = {k: v for k, v in iteritems(node) if _is_valid_group(v)}
         for child_name, child_table in groups.items():
@@ -159,7 +163,7 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
                 for gchild_name, gchild_table in _gen_glob_data(build_dir, child_name, child_table):
                     full_gchild_name = name + '/' + gchild_name if name else gchild_name
                     _build_node(build_dir, package, full_gchild_name, gchild_table, fmt,
-                        checks_contents=checks_contents, dry_run=dry_run, env=env, ancestor_args=ancestor_args)
+                        checks_contents=checks_contents, dry_run=dry_run, env=env, ancestor_args=group_args)
             else:
                 if not isinstance(child_name, str) or not is_nodename(child_name):
                     raise StoreException("Invalid node name: %r" % child_name)
@@ -167,7 +171,7 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
                     # raise StoreException("Invalid node name: %r" % child_table)
                     full_child_name = name + '/' + child_name if name else child_name
                     _build_node(build_dir, package, full_child_name, child_table, fmt,
-                        checks_contents=checks_contents, dry_run=dry_run, env=env, ancestor_args=ancestor_args)
+                        checks_contents=checks_contents, dry_run=dry_run, env=env, ancestor_args=group_args)
     else:  # leaf node
         # prevent overwriting existing node names
         if name in package:
