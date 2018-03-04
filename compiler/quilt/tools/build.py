@@ -147,10 +147,6 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         # fetch local transform and kwargs values; we do it using ifs
         # to prevent `key: None` from polluting the update
         local_args = _get_local_args(node, [RESERVED['transform'], RESERVED['kwargs']])
-        # if node.get(RESERVED['transform']):
-        #     local_args[RESERVED['transform']] = node[RESERVED['transform']]
-        # if node.get(RESERVED['kwargs']):
-        #     local_args[RESERVED['kwargs']] = node[RESERVED['kwargs']]
         group_args = ancestor_args.copy()
         group_args.update(local_args)
         # if it's not a reserved word it's a group that we can descend
@@ -165,11 +161,11 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
             else:
                 if not isinstance(child_name, str) or not is_nodename(child_name):
                     raise StoreException("Invalid node name: %r" % child_name)
-                if not isinstance(child_table, str):
-                    # raise StoreException("Invalid node name: %r" % child_table)
-                    full_child_name = name + '/' + child_name if name else child_name
-                    _build_node(build_dir, package, full_child_name, child_table, fmt,
-                        checks_contents=checks_contents, dry_run=dry_run, env=env, ancestor_args=group_args)
+                # if not isinstance(child_table, str):
+                # raise StoreException("Invalid node name: %r" % child_table)
+                full_child_name = name + '/' + child_name if name else child_name
+                _build_node(build_dir, package, full_child_name, child_table, fmt,
+                    checks_contents=checks_contents, dry_run=dry_run, env=env, ancestor_args=group_args)
     else:  # leaf node
         # prevent overwriting existing node names
         if name in package:
