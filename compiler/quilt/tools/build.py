@@ -148,11 +148,11 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         # NOTE: YAML parsing does not guarantee key order
         # fetch local transform and kwargs values; we do it using ifs
         # to prevent `key: None` from polluting the update
-        local_args = _get_local_args(node, [RESERVED['transform'], RESERVED['kwargs']])
-        # if node.get(RESERVED['transform']):
-        #     local_args[RESERVED['transform']] = node[RESERVED['transform']]
-        # if node.get(RESERVED['kwargs']):
-        #     local_args[RESERVED['kwargs']] = node[RESERVED['kwargs']]
+        local_args = {} #_get_local_args(node, [RESERVED['transform'], RESERVED['kwargs']])
+        if node.get(RESERVED['transform']):
+            local_args[RESERVED['transform']] = node[RESERVED['transform']]
+        if node.get(RESERVED['kwargs']):
+            local_args[RESERVED['kwargs']] = node[RESERVED['kwargs']]
         group_args = ancestor_args.copy()
         group_args.update(local_args)
         # if it's not a reserved word it's a group that we can descend
