@@ -146,11 +146,11 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
         # to prevent `key: None` from polluting the update
         local_args = {}
         if node.get(RESERVED['transform']):
-            local_args[RESERVED['transform']] = node[RESERVED['transform']]
+            ancestor_args[RESERVED['transform']] = node[RESERVED['transform']]
         if node.get(RESERVED['kwargs']):
-            local_args[RESERVED['kwargs']] = node[RESERVED['kwargs']]
-        group_args = ancestor_args.copy()
-        group_args.update(local_args)
+            ancestor_args[RESERVED['kwargs']] = node[RESERVED['kwargs']]
+        # group_args = ancestor_args.copy()
+        # group_args.update(local_args)
         # if it's not a reserved word it's a group that we can descend
         groups = {k: v for k, v in iteritems(node) if _is_valid_group(v)}
         for child_name, child_table in groups.items():
