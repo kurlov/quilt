@@ -67,7 +67,7 @@ def _is_internal_node(node):
         return False
     if isinstance(node, int):
         # assert node is None
-        return False
+        return True
     is_leaf = not node or isinstance(node.get(RESERVED['file']), str)
     return not is_leaf
 
