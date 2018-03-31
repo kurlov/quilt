@@ -487,7 +487,6 @@ class BuildTest(QuiltTestCase):
         with self.assertRaises(build.BuildException):
             build.build_package_from_contents(None, 'test', 'shouldfail', str(mydir), bad_build_contents)
 
-    @patch('sys.stdout', new_callable=StringIO)
     def test_group_node_repr_short(self):
         mydir = pathlib.Path(os.path.dirname(__file__))
 
@@ -511,7 +510,8 @@ class BuildTest(QuiltTestCase):
         pretty = '<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/'
         assert type(fewnodes.main_group_node) is GroupNode
         assert str(fewnodes.main_group_node) == pretty
-        assert mock_stdout.getvalue() == pretty
+        with patch('sys.stdout', new_callable=StringIO):
+            assert mock_stdout.getvalue() == pretty
 
     def test_group_node_repr_exceed_by_one(self):
         mydir = pathlib.Path(os.path.dirname(__file__))
