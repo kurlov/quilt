@@ -508,11 +508,9 @@ class BuildTest(QuiltTestCase):
         build.build_package_from_contents(None, 'test', 'fewnodes', str(mydir), build_compose_contents)
         from quilt.data.test import fewnodes
 
-        pretty = u'<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/\n'
+        pretty = '<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/'
         assert type(fewnodes.main_group_node) is GroupNode
-        # assert str(fewnodes.main_group_node) == pretty
-        print(u'%s ' % fewnodes.main_group_node)
-        assert pretty in mock_stdout.getvalue()
+        assert repr(fewnodes.main_group_node) == pretty
 
     def test_group_node_repr_exceed_by_one(self):
         mydir = pathlib.Path(os.path.dirname(__file__))
