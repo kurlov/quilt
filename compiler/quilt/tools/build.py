@@ -231,7 +231,7 @@ def _build_node(build_dir, package, name, node, fmt, target='pandas', checks_con
                 transform = ext
                 if transform not in PARSERS:
                     transform = ID
-                print(u"Inferring 'transform: %s' for %s" % (transform, rel_path))
+                print("Inferring 'transform: %s' for %s" % (transform, rel_path))
             # TODO: parse/check environments:
             # environments = node.get(RESERVED['environments'])
 

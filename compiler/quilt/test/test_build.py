@@ -9,7 +9,7 @@ import pandas.api.types as ptypes
 from pandas.core.frame import DataFrame
 from six import assertRaisesRegex, string_types
 import yaml
-from io import StringIO
+from io import StringIO, BytesIO
 
 from ..nodes import GroupNode, PackageNode
 from ..tools.package import ParquetLib, Package
@@ -487,7 +487,7 @@ class BuildTest(QuiltTestCase):
         with self.assertRaises(build.BuildException):
             build.build_package_from_contents(None, 'test', 'shouldfail', str(mydir), bad_build_contents)
 
-    @patch('sys.stdout', new_callable=StringIO)
+    @patch('sys.stdout', new_callable=BytesIO)
     def test_group_node_repr_short(self, mock_stdout):
         mydir = pathlib.Path(os.path.dirname(__file__))
 
