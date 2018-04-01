@@ -511,7 +511,8 @@ class BuildTest(QuiltTestCase):
         pretty = u'<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/'
         assert type(fewnodes.main_group_node) is GroupNode
         # assert str(fewnodes.main_group_node) == pretty
-        mock_stdout.getvalue()
+        print()
+        assert mock_stdout.getvalue()
         print(fewnodes.main_group_node)
         assert mock_stdout.getvalue() == pretty
 
