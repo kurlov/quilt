@@ -508,7 +508,7 @@ class BuildTest(QuiltTestCase):
         build.build_package_from_contents(None, 'test', 'fewnodes', str(mydir), build_compose_contents)
         from quilt.data.test import fewnodes
 
-        pretty = u'<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/'
+        pretty = u'<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/\n'
         assert type(fewnodes.main_group_node) is GroupNode
         # assert str(fewnodes.main_group_node) == pretty
         print()
