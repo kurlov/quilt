@@ -494,7 +494,7 @@ class BuildTest(QuiltTestCase):
         # leaf with data for each node
         data_node = {
             'data_node': {
-                'file': 'data/foo.csv'
+                'package': 'test/simple'
             }
         }
 
