@@ -487,8 +487,7 @@ class BuildTest(QuiltTestCase):
         with self.assertRaises(build.BuildException):
             build.build_package_from_contents(None, 'test', 'shouldfail', str(mydir), bad_build_contents)
 
-    @patch('sys.stdout', new_callable=BytesIO)
-    def test_group_node_repr_short(self, mock_stdout):
+    def test_group_node_repr_short(self):
         mydir = pathlib.Path(os.path.dirname(__file__))
 
         # leaf with data for each node
@@ -534,7 +533,7 @@ class BuildTest(QuiltTestCase):
 
         pretty = '<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/\nsubnode_003/\nsubnode_004/\n'
         pretty += 'subnode_005/\nsubnode_006/\nsubnode_007/\nsubnode_008/\nsubnode_009/\nsubnode_010/'
-        assert str(maxplusone.main_group_node) == pretty
+        assert repr(maxplusone.main_group_node) == pretty
 
     def test_group_node_repr_max_len(self):
         mydir = pathlib.Path(os.path.dirname(__file__))
@@ -560,4 +559,4 @@ class BuildTest(QuiltTestCase):
         pretty = '<GroupNode>\n'
         pretty += 'subnode_000/\nsubnode_001/\nsubnode_002/\nsubnode_003/\nsubnode_004/\n\n...\n\n'
         pretty += 'subnode_015/\nsubnode_016/\nsubnode_017/\nsubnode_018/\nsubnode_019/'
-        assert str(manynodes.main_group_node) == pretty
+        assert repr(manynodes.main_group_node) == pretty
