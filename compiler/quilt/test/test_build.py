@@ -533,7 +533,7 @@ class BuildTest(QuiltTestCase):
         pretty = '<GroupNode>' + '\n'.join(['subnode_' + str(x).zfill(3) for x in range(PRETTY_MAX_LEN+1)])
         assert repr(maxplusone.main_group_node) == pretty
 
-    def test_group_node_repr_max_len(self):
+    def test_group_node_repr_more_then_max(self):
         mydir = pathlib.Path(os.path.dirname(__file__))
 
         # leaf with data for each node
@@ -544,7 +544,8 @@ class BuildTest(QuiltTestCase):
         }
 
         # create many subnodes which exceed PRETTY_MAX_LEN by 10
-        too_many_subnodes = {('subnode_' + str(x).zfill(3)): data_node for x in range(PRETTY_MAX_LEN+10)}
+        size = PRETTY_MAX_LEN + 10
+        too_many_subnodes = {('subnode_' + str(x).zfill(3)): data_node for x in range(size)}
         build_compose_contents = {
             'contents': {
                 'main_group_node': too_many_subnodes
@@ -555,6 +556,6 @@ class BuildTest(QuiltTestCase):
         from quilt.data.test import manynodes
 
         pretty = '<GroupNode>\n'
-        pretty += 'subnode_000/\nsubnode_001/\nsubnode_002/\nsubnode_003/\nsubnode_004/\n\n...\n\n'
-        pretty += 'subnode_015/\nsubnode_016/\nsubnode_017/\nsubnode_018/\nsubnode_019/'
+        pretty += '\n'.join(['subnode_' + str(x).zfill(3) for x in range(PRETTY_MAX_LEN//2)]) + '\n\n...\n\n'
+        pretty += '\n'.join(['subnode_' + str(x).zfill(3) for x in range(size-(PRETTY_MAX_LEN//2))])
         assert repr(manynodes.main_group_node) == pretty
