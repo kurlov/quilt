@@ -9,7 +9,6 @@ import pandas.api.types as ptypes
 from pandas.core.frame import DataFrame
 from six import assertRaisesRegex, string_types
 import yaml
-from io import StringIO, BytesIO
 
 from ..nodes import GroupNode, PackageNode
 from ..tools.package import ParquetLib, Package
@@ -531,8 +530,7 @@ class BuildTest(QuiltTestCase):
         build.build_package_from_contents(None, 'test', 'maxplusone', str(mydir), build_compose_contents)
         from quilt.data.test import maxplusone
 
-        pretty = '<GroupNode>\nsubnode_000/\nsubnode_001/\nsubnode_002/\nsubnode_003/\nsubnode_004/\n'
-        pretty += 'subnode_005/\nsubnode_006/\nsubnode_007/\nsubnode_008/\nsubnode_009/\nsubnode_010/'
+        pretty = '<GroupNode>' + '\n'.join(['subnode_' + str(x).zfill(3) for x in range(PRETTY_MAX_LEN+1)])
         assert repr(maxplusone.main_group_node) == pretty
 
     def test_group_node_repr_max_len(self):
