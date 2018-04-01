@@ -530,7 +530,7 @@ class BuildTest(QuiltTestCase):
         build.build_package_from_contents(None, 'test', 'maxplusone', str(mydir), build_compose_contents)
         from quilt.data.test import maxplusone
 
-        pretty = '<GroupNode>' + '\n'.join(['subnode_' + str(x).zfill(3) for x in range(PRETTY_MAX_LEN+1)])
+        pretty = '<GroupNode>' + ''.join(['\nsubnode_' + str(x).zfill(3) for x in range(PRETTY_MAX_LEN+1)])
         assert repr(maxplusone.main_group_node) == pretty
 
     def test_group_node_repr_more_then_max(self):
@@ -556,6 +556,6 @@ class BuildTest(QuiltTestCase):
         from quilt.data.test import manynodes
 
         pretty = '<GroupNode>\n'
-        pretty += '\n'.join(['subnode_' + str(x).zfill(3) for x in range(PRETTY_MAX_LEN//2)]) + '\n\n...\n\n'
-        pretty += '\n'.join(['subnode_' + str(x).zfill(3) for x in range(size-(PRETTY_MAX_LEN//2))])
+        pretty += ''.join(['\nsubnode_' + str(x).zfill(3) for x in range(PRETTY_MAX_LEN//2)]) + '\n\n...\n\n'
+        pretty += ''.join(['\nsubnode_' + str(x).zfill(3) for x in range(size-(PRETTY_MAX_LEN//2))])
         assert repr(manynodes.main_group_node) == pretty
