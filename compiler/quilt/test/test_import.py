@@ -44,12 +44,14 @@ class ImportTest(QuiltTestCase):
         # this should contain elements
         assert list(package)
         assert len(list(package)) == 2
-        assert isinstance(list(package)[0], GroupNode)
-        assert isinstance(list(package)[1], DataNode)
 
-        # iter over an empty GroupNode
-        # for node in dataframes:
-        #     assert not node
+        for item in package:
+            assert isinstance(item, (GroupNode, DataNode))
+
+        # dataframes contains only DataNode
+        assert list(package)
+        for node in dataframes:
+            assert isinstance(node, DataNode)
 
         assert isinstance(README(), string_types)
         assert isinstance(README._data(), string_types)
