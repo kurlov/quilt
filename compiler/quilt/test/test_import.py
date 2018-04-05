@@ -42,7 +42,7 @@ class ImportTest(QuiltTestCase):
         assert set(dataframes._data_keys()) == {'csv', 'nulls'}
 
         # this should contain elements
-        assert list(package)
+        assert list(package) is None
         for node in package:
             assert node
         # iter over an empty GroupNode
