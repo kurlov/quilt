@@ -43,11 +43,11 @@ class ImportTest(QuiltTestCase):
 
         # this should contain elements
         assert list(package)
-        # for node in package:
-        #     assert node
+        for node in package:
+            assert node
         # iter over an empty GroupNode
-        for node in dataframes:
-            assert not node
+        # for node in dataframes:
+        #     assert not node
 
         assert isinstance(README(), string_types)
         assert isinstance(README._data(), string_types)
