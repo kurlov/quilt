@@ -31,7 +31,9 @@ class FakeLoader(object):
         """
         Returns an empty module.
         """
-        if 'aics' in fullname:
+        # if 'aics' in fullname:
+        #     raise ValueError("NOT THIS ERROR!")
+        if fullname not in sys.modules:
             raise ValueError("NOT THIS ERROR!")
         mod = sys.modules.setdefault(fullname, imp.new_module(fullname))
         mod.__file__ = self._path
