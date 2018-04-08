@@ -31,6 +31,8 @@ class FakeLoader(object):
         """
         Returns an empty module.
         """
+        if 'aics' in fullname:
+            raise ValueError("NOT THIS ERROR!")
         mod = sys.modules.setdefault(fullname, imp.new_module(fullname))
         mod.__file__ = self._path
         mod.__loader__ = self
@@ -98,6 +100,8 @@ class ModuleFinder(object):
         """
         Looks up the table based on the module path.
         """
+        if 'aics' in fullname:
+            raise ValueError("NOT THIS ERROR!")
         if not fullname.startswith(self._module_name + '.'):
             # Not a quilt submodule.
             return None
