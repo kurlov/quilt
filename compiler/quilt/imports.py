@@ -54,9 +54,6 @@ def _from_core_node(package, core_node):
             child = _from_core_node(package, core_child)
             setattr(node, name, child)
 
-    if not node:
-        raise ValueError("NOT THIS ERROR!")
-
     return node
 
 
@@ -80,6 +77,8 @@ class PackageLoader(object):
 
         mod = _from_core_node(self._package, self._package.get_contents())
         sys.modules[fullname] = mod
+        if not mod:
+            raise ValueError("NOT THIS ERROR!")
         return mod
 
 
