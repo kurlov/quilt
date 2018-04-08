@@ -75,6 +75,9 @@ class ImportTest(QuiltTestCase):
         with self.assertRaises(ImportError):
             from quilt.data.foo.baz import blah
 
+        with self.assertRaises(ImportError):
+            from quilt.data.aics import aics24
+
     def test_team_imports(self):
         mydir = os.path.dirname(__file__)
         build_path = os.path.join(mydir, './build.yml')
