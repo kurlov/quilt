@@ -54,6 +54,9 @@ def _from_core_node(package, core_node):
             child = _from_core_node(package, core_child)
             setattr(node, name, child)
 
+    if not node:
+        raise ValueError("NOT THIS ERROR!")
+
     return node
 
 
@@ -71,8 +74,6 @@ class PackageLoader(object):
         mod = sys.modules.get(fullname)
         if mod is not None:
             return mod
-        else:
-            raise ValueError("NOT THIS ERROR!")
 
         # We're creating an object rather than a module. It's a hack, but it's approved by Guido:
         # https://mail.python.org/pipermail/python-ideas/2012-May/014969.html
