@@ -262,7 +262,7 @@ class ImportTest(QuiltTestCase):
         command.build('foo/package4', build_path)
 
         from quilt.data.foo import package4
-
+        import quilt.data
         assert dir(quilt.data) is None
 
         # Assign a DataFrame as a node
