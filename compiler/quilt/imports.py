@@ -70,6 +70,8 @@ class PackageLoader(object):
         """
         Returns an object that lazily looks up tables and groups.
         """
+        if 'aics' in fullname:
+            raise ValueError("NOT THIS ERROR!")
         mod = sys.modules.get(fullname)
         if mod is not None:
             return mod
