@@ -36,6 +36,8 @@ class FakeLoader(object):
         mod.__loader__ = self
         mod.__path__ = []
         mod.__package__ = fullname
+        if not mod:
+            raise ValueError("NOT THIS ERROR!")
         return mod
 
 
