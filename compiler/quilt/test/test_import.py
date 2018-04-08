@@ -263,6 +263,8 @@ class ImportTest(QuiltTestCase):
 
         from quilt.data.foo import package4
 
+        assert dir(quilt.data) is None
+
         # Assign a DataFrame as a node
         # (should throw exception)
         df = pd.DataFrame(dict(a=[1, 2, 3]))
