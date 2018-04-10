@@ -74,8 +74,8 @@ class PackageLoader(object):
         """
         Returns an object that lazily looks up tables and groups.
         """
-        if 'aics' in fullname:
-            raise ValueError("NOT THIS ERROR!")
+        # if 'aics' in fullname:
+        #     raise ValueError("NOT THIS ERROR!")
         mod = sys.modules.get(fullname)
         if mod is not None:
             return mod
@@ -102,8 +102,8 @@ class ModuleFinder(object):
         """
         Looks up the table based on the module path.
         """
-        if 'aics' in fullname:
-            raise ValueError("NOT THIS ERROR!")
+        # if 'aics' in fullname:
+        #     raise ValueError("NOT THIS ERROR!")
         if not fullname.startswith(self._module_name + '.'):
             # Not a quilt submodule.
             return None
@@ -123,6 +123,7 @@ class ModuleFinder(object):
             if pkg is not None:
                 return PackageLoader(pkg)
             else:
+                raise ValueError(pkg)
                 return None
 
         # Return fake loaders for partial paths.
