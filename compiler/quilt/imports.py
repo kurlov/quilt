@@ -118,6 +118,8 @@ class ModuleFinder(object):
         for store_dir in PackageStore.find_store_dirs():
             store = PackageStore(store_dir)
 
+            raise ValueError(store_dir)
+
             if len(parts) == 0:
                 assert self._teams
                 path = store.team_path(team)
