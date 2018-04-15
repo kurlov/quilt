@@ -112,7 +112,7 @@ class ModuleFinder(object):
             if pkg is not None:
                 return PackageLoader(pkg)
             else:
-                raise ValueError('No such package!', submodule)
+                # raise ValueError('No such package!', submodule)
                 return None
 
         dirs = []
@@ -132,11 +132,11 @@ class ModuleFinder(object):
             if os.path.isdir(path):
                 return FakeLoader(path)
 
-        # make a hint in case of typo
+        # make a guess in case of typo
         # e.g. user typed 'pakcage' instead of 'package'
-        hint = get_close_matches(parts[0], dirs, n=1)
-        if hint:
-            raise ImportError('"%s" not found. Did you mean %s?' % (parts[0], hint))
+        guess = get_close_matches(parts[0], dirs, n=1)
+        if guess:
+            raise ImportError('"%s" not found. Did you mean %s?' % (parts[0], guess))
 
         # Nothing is found.
         raise ImportError('Not found. Do you need to `quilt install %s`?' % submodule)
