@@ -128,16 +128,16 @@ class BuildTest(QuiltTestCase):
         from quilt.data.empty import pkg
         assert not pkg._keys(), 'Expected package to be empty'
 
-    def test_build_guess(self):
-        """
-        test building from build_empty.yml
-        """
-        mydir = os.path.dirname(__file__)
-        path = os.path.join(mydir, './build_empty.yml')
-        build.build_package(None, 'guess', 'hint', path)
-
-        with assertRaisesRegex(self, Exception, r'"hnt" not found. Did you mean hnt?'):
-            from quilt.data.guess import hnt
+    # def test_build_guess(self):
+    #     """
+    #     test building from build_empty.yml
+    #     """
+    #     mydir = os.path.dirname(__file__)
+    #     path = os.path.join(mydir, './build_empty.yml')
+    #     build.build_package(None, 'guess', 'hint', path)
+    #
+    #     with assertRaisesRegex(self, Exception, r'"hnt" not found. Did you mean hnt?'):
+    #         from quilt.data.guess import hnt
 
         # from quilt.data.empt import pkg
         # assert not pkg._keys(), 'Expected package to be empty'
