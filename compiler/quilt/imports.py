@@ -115,9 +115,13 @@ class ModuleFinder(object):
                 # raise ValueError('No such package!')
                 return None
 
+        dirs = []
         # Return fake loaders for partial paths.
         for store_dir in PackageStore.find_store_dirs():
             store = PackageStore(store_dir)
+
+            # append all dirs for matching
+            dirs += [d for d in os.listdir(store_dir) if os.path.isdir(os.path.join(store_dir, d))]
 
             if len(parts) == 0:
                 assert self._teams
@@ -126,10 +130,15 @@ class ModuleFinder(object):
                 path = store.user_path(team, parts[0])
 
             if os.path.isdir(path):
-                raise ValueError(PackageStore.find_store_dirs(), len(PackageStore.find_store_dirs()), )
+                # raise ValueError(PackageStore.find_store_dirs(), len(PackageStore.find_store_dirs()), )
                 # raise ValueError(store_dir, submodule, path)
                 return FakeLoader(path)
 
+        # make a hint in case of typo
+        # e.g. user typed 'pakcage' instead of 'package'
+        hint = get_close_matches(parts[0], dirs, n=1)
+        if hint:
+            raise ImportError('"%s" not found. Did you mean %s?' % (parts[0], hint))
+
         # Nothing is found.
-        raise ImportError('Not found. Do you need to `quilt install USR/PKG`?')
-        return None
+        raise ImportError('Not found. Do you need to `quilt install %s`?' % submodule)
