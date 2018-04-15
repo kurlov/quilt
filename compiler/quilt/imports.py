@@ -86,7 +86,7 @@ class PackageLoader(object):
         mod = _from_core_node(self._package, self._package.get_contents())
         sys.modules[fullname] = mod
         if not mod:
-            raise ValueError("NOT THIS ERROR!")
+            raise ValueError("NOT THIS ERROR 2!")
         return mod
 
 
