@@ -137,7 +137,7 @@ class BuildTest(QuiltTestCase):
         build.build_package(None, 'guess', 'hint', path)
 
         with assertRaisesRegex(self, Exception, r'"hnt" not found. Did you mean hnt?'):
-            import quilt.data.guess.hnt
+            from quilt.data.guess import hnt
 
         # from quilt.data.empt import pkg
         # assert not pkg._keys(), 'Expected package to be empty'
