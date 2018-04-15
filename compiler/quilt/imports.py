@@ -100,9 +100,6 @@ class ModuleFinder(object):
         submodule = fullname[len(self._module_name) + 1:]
         parts = submodule.split('.')
 
-        if parts[0] == 'empty':
-            raise ImportError(1)
-
         # Pop the team prefix if this is a team import.
         if self._teams:
             team = parts.pop(0)
