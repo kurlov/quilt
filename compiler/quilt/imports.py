@@ -137,6 +137,6 @@ class ModuleFinder(object):
         guess = get_close_matches(parts[0], dirs, n=1)
         if guess:
             raise ImportError('"%s" not found. Did you mean %s?' % (parts[0], guess))
-
+        raise ImportError(guess, dirs)
         # Nothing is found.
         raise ImportError('Not found. Do you need to `quilt install %s`?' % submodule)
