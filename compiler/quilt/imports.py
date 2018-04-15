@@ -94,6 +94,7 @@ class ModuleFinder(object):
         """
         if not fullname.startswith(self._module_name + '.'):
             # Not a quilt submodule.
+            raise ValueError('No such package!')
             return None
 
         submodule = fullname[len(self._module_name) + 1:]
@@ -127,5 +128,5 @@ class ModuleFinder(object):
                 return FakeLoader(path)
 
         # Nothing is found.
-        raise ValueError('No such package!')
+        # raise ValueError('No such package!')
         return None
