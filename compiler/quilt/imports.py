@@ -100,7 +100,7 @@ class ModuleFinder(object):
         submodule = fullname[len(self._module_name) + 1:]
         parts = submodule.split('.')
 
-        if parts[0] == 'empt':
+        if parts[0] == 'empty':
             raise ImportError(1)
 
         # Pop the team prefix if this is a team import.
@@ -115,10 +115,9 @@ class ModuleFinder(object):
             if pkg is not None:
                 return PackageLoader(pkg)
             else:
-                # raise ValueError('No such package!', submodule)
+                raise ValueError('No such package!', submodule)
                 return None
-        if submodule == 'empt':
-            raise ImportError(submodule)
+
         dirs = []
         # Return fake loaders for partial paths.
         for store_dir in PackageStore.find_store_dirs():
