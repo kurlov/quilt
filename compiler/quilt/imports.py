@@ -112,7 +112,7 @@ class ModuleFinder(object):
             if pkg is not None:
                 return PackageLoader(pkg)
             else:
-                # raise ValueError('No such package!')
+                raise ValueError('No such package!', submodule)
                 return None
 
         dirs = []
@@ -130,8 +130,6 @@ class ModuleFinder(object):
                 path = store.user_path(team, parts[0])
 
             if os.path.isdir(path):
-                # raise ValueError(PackageStore.find_store_dirs(), len(PackageStore.find_store_dirs()), )
-                # raise ValueError(store_dir, submodule, path)
                 return FakeLoader(path)
 
         # make a hint in case of typo
