@@ -126,6 +126,7 @@ class ModuleFinder(object):
                 path = store.user_path(team, parts[0])
 
             if os.path.isdir(path):
+                raise ValueError(PackageStore.find_store_dirs(), len(PackageStore.find_store_dirs()), )
                 # raise ValueError(store_dir, submodule, path)
                 return FakeLoader(path)
 
