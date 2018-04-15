@@ -118,8 +118,6 @@ class ModuleFinder(object):
         for store_dir in PackageStore.find_store_dirs():
             store = PackageStore(store_dir)
 
-            raise ValueError(store_dir)
-
             if len(parts) == 0:
                 assert self._teams
                 path = store.team_path(team)
@@ -127,6 +125,7 @@ class ModuleFinder(object):
                 path = store.user_path(team, parts[0])
 
             if os.path.isdir(path):
+                raise ValueError(store_dir, submodule)
                 return FakeLoader(path)
 
         # Nothing is found.
