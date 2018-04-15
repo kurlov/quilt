@@ -114,7 +114,8 @@ class ModuleFinder(object):
             else:
                 # raise ValueError('No such package!', submodule)
                 return None
-
+        if submodule == 'empt':
+            raise ImportError(submodule)
         dirs = []
         # Return fake loaders for partial paths.
         for store_dir in PackageStore.find_store_dirs():
