@@ -127,5 +127,5 @@ class ModuleFinder(object):
                 return FakeLoader(path)
 
         # Nothing is found.
-        raise ImportError('No such package!')
+        raise ValueError('No such package!')
         return None
