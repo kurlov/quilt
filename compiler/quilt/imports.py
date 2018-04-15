@@ -111,7 +111,7 @@ class ModuleFinder(object):
             if pkg is not None:
                 return PackageLoader(pkg)
             else:
-                raise ValueError('No such package!')
+                # raise ValueError('No such package!')
                 return None
 
         # Return fake loaders for partial paths.
@@ -128,5 +128,5 @@ class ModuleFinder(object):
                 return FakeLoader(path)
 
         # Nothing is found.
-        # raise ValueError('No such package!')
+        raise ImportError('Not found. Do you need to `quilt install USR/PKG`?')
         return None
