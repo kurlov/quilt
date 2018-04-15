@@ -136,8 +136,8 @@ class BuildTest(QuiltTestCase):
         path = os.path.join(mydir, './build_empty.yml')
         build.build_package(None, 'empty', 'pkg', path)
 
-         with assertRaisesRegex(self, Exception, r'"empt"  not found. Did you mean empty?'):
->           from quilt.data.empt import pkg
+        with assertRaisesRegex(self, Exception, r'"empt" not found. Did you mean empty?'):
+            from quilt.data.empt import pkg
 
         # from quilt.data.empt import pkg
         # assert not pkg._keys(), 'Expected package to be empty'
