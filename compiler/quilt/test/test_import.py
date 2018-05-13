@@ -6,7 +6,7 @@ import os
 import time
 
 import pandas as pd
-from six import string_types
+from six import assertRaisesRegex, string_types
 
 from quilt.nodes import GroupNode, DataNode
 from quilt.tools import command
