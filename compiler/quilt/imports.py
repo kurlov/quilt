@@ -132,9 +132,10 @@ class ModuleFinder(object):
                 path = store.user_path(team, parts[0])
 
             if os.path.isdir(path):
-                raise ValueError("WTF!")
                 # raise ValueError('No such FakeLoader!', submodule, parts)
                 return FakeLoader(path)
+
+        raise ValueError("WTF!")
 
         # make a guess in case of typo
         # e.g. user typed 'pakcage' instead of 'package'
