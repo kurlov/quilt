@@ -135,7 +135,7 @@ class ModuleFinder(object):
                 # raise ValueError('No such FakeLoader!', submodule, parts)
                 return FakeLoader(path)
 
-        raise ValueError("WTF!")
+        raise ImportError("WTF!")
 
         # make a guess in case of typo
         # e.g. user typed 'pakcage' instead of 'package'
