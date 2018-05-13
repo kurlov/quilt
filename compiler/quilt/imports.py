@@ -112,7 +112,7 @@ class ModuleFinder(object):
             if pkg is not None:
                 return PackageLoader(pkg)
             else:
-                # raise ValueError('No such package!', submodule)
+                raise ValueError('No such package!', submodule)
                 return None
 
         dirs = []
