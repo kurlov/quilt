@@ -139,7 +139,7 @@ class ModuleFinder(object):
         # make a guess in case of typo
         # e.g. user typed 'pakcage' instead of 'package'
         guess = get_close_matches(parts[0], dirs, n=1)
-        raise ValueError("hmmm WTF!", guess, parts[0], dirs)
+        # raise ValueError("hmmm WTF!", guess, parts[0], dirs)
         if guess:
             raise ValueError('"%s" not found. Did you mean %s?' % (parts[0], guess))
         else:
