@@ -95,7 +95,7 @@ class ModuleFinder(object):
         """
         if not fullname.startswith(self._module_name + '.'):
             # Not a quilt submodule.
-            raise ValueError("WTF!")
+            # raise ValueError("WTF!")
             return None
 
         submodule = fullname[len(self._module_name) + 1:]
@@ -132,6 +132,7 @@ class ModuleFinder(object):
                 path = store.user_path(team, parts[0])
 
             if os.path.isdir(path):
+                raise ValueError('No such FakeLoader!', submodule, parts)
                 return FakeLoader(path)
 
         # make a guess in case of typo
