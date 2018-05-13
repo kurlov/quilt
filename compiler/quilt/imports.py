@@ -110,6 +110,7 @@ class ModuleFinder(object):
         if len(parts) == 2:
             pkg = PackageStore.find_package(team, parts[0], parts[1])
             if pkg is not None:
+                raise ValueError('No such PackageLoader!', submodule, parts)
                 return PackageLoader(pkg)
             else:
                 raise ValueError('No such package!', submodule, parts)
