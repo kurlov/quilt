@@ -111,9 +111,9 @@ class ModuleFinder(object):
             pkg = PackageStore.find_package(team, parts[0], parts[1])
             if pkg is not None:
                 return PackageLoader(pkg)
-            # else:
-            #     raise ValueError('No such package!', submodule)
-            #     return None
+            else:
+                raise ValueError('No such package!', submodule, parts)
+                return None
 
         dirs = []
         # Return fake loaders for partial paths.
