@@ -124,13 +124,13 @@ class ModuleFinder(object):
 
             # append all dirs for matching
             dirs += [d for d in os.listdir(store_dir) if os.path.isdir(os.path.join(store_dir, d))]
-            raise ValueError("WTF!")
+
             if len(parts) == 0:
                 assert self._teams
                 path = store.team_path(team)
             elif len(parts) == 1:
                 path = store.user_path(team, parts[0])
-
+            raise ValueError("WTF!")
             if os.path.isdir(path):
                 # raise ValueError('No such FakeLoader!', submodule, parts)
                 return FakeLoader(path)
