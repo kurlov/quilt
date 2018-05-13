@@ -145,7 +145,7 @@ class ImportTest(QuiltTestCase):
         build_path = os.path.join(mydir, './build_empty.yml')
         command.build('guess/pkg', build_path)
 
-        with assertRaisesRegex(self, Exception, r'"gues" not found. Did you mean guess?'):
+        with assertRaisesRegex(self, ImportError, r'"gues" not found. Did you mean guess?'):
             import quilt.data.gues
 
         # from quilt.data.empt import pkg

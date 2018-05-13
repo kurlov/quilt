@@ -97,7 +97,7 @@ class ModuleFinder(object):
             # Not a quilt submodule.
             # raise ValueError("WTF!")
             return None
-
+        raise ValueError("WTF!")
         submodule = fullname[len(self._module_name) + 1:]
         parts = submodule.split('.')
 
