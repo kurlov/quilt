@@ -130,8 +130,9 @@ class ModuleFinder(object):
                 path = store.team_path(team)
             elif len(parts) == 1:
                 path = store.user_path(team, parts[0])
-            raise ValueError("WTF!")
+
             if os.path.isdir(path):
+                raise ValueError("WTF!")
                 # raise ValueError('No such FakeLoader!', submodule, parts)
                 return FakeLoader(path)
 
