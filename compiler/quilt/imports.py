@@ -97,7 +97,7 @@ class ModuleFinder(object):
             # Not a quilt submodule.
             # raise ValueError("WTF!")
             return None
-        raise ValueError("WTF!")
+
         submodule = fullname[len(self._module_name) + 1:]
         parts = submodule.split('.')
 
@@ -116,7 +116,7 @@ class ModuleFinder(object):
             else:
                 # raise ValueError('No such package!', submodule, parts)
                 return None
-
+        raise ValueError("WTF!")
         dirs = []
         # Return fake loaders for partial paths.
         for store_dir in PackageStore.find_store_dirs():
