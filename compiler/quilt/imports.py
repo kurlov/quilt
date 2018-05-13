@@ -116,7 +116,7 @@ class ModuleFinder(object):
             else:
                 # raise ValueError('No such package!', submodule, parts)
                 return None
-        raise ValueError("WTF!")
+
         dirs = []
         # Return fake loaders for partial paths.
         for store_dir in PackageStore.find_store_dirs():
@@ -124,7 +124,7 @@ class ModuleFinder(object):
 
             # append all dirs for matching
             dirs += [d for d in os.listdir(store_dir) if os.path.isdir(os.path.join(store_dir, d))]
-
+            raise ValueError("WTF!")
             if len(parts) == 0:
                 assert self._teams
                 path = store.team_path(team)
@@ -132,7 +132,7 @@ class ModuleFinder(object):
                 path = store.user_path(team, parts[0])
 
             if os.path.isdir(path):
-                raise ValueError('No such FakeLoader!', submodule, parts)
+                # raise ValueError('No such FakeLoader!', submodule, parts)
                 return FakeLoader(path)
 
         # make a guess in case of typo
