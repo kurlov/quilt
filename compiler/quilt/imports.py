@@ -113,7 +113,7 @@ class ModuleFinder(object):
                 raise ValueError('No such PackageLoader!', submodule, parts)
                 return PackageLoader(pkg)
             else:
-                raise ValueError('No such package!', submodule, parts)
+                # raise ValueError('No such package!', submodule, parts)
                 return None
 
         dirs = []
