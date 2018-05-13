@@ -95,6 +95,7 @@ class ModuleFinder(object):
         """
         if not fullname.startswith(self._module_name + '.'):
             # Not a quilt submodule.
+            raise ValueError("WTF!")
             return None
 
         submodule = fullname[len(self._module_name) + 1:]
@@ -110,7 +111,7 @@ class ModuleFinder(object):
         if len(parts) == 2:
             pkg = PackageStore.find_package(team, parts[0], parts[1])
             if pkg is not None:
-                raise ValueError('No such PackageLoader!', submodule, parts)
+                # raise ValueError('No such PackageLoader!', submodule, parts)
                 return PackageLoader(pkg)
             else:
                 # raise ValueError('No such package!', submodule, parts)
